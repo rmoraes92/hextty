@@ -3,6 +3,12 @@
 Reads a list of hex color codes and suggest the closest match between the basic
 8 terminal colors
 
+
+## Screenshots
+
+![Screenshot From 2025-03-28 14-01-29](https://github.com/user-attachments/assets/0f8c98f4-d261-412e-8f3f-bb11a973d6cc)
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

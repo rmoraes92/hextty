@@ -36,17 +36,30 @@ class TerminalColors {
     double redLowerThreshold = 0.70,
     double greenLowerThreshold = 0.70,
     double blueLowerThreshold = 0.70,
+    double redUpThreshold = 0.50,
+    double greenUpThreshold = 0.50,
+    double blueUpThreshold = 0.50,
   }) {
-    print("redLowerThreshold $redLowerThreshold");
-    print("greenLowerThreshold $greenLowerThreshold");
-    print("blueLowerThreshold $blueLowerThreshold");
+    print("Color ${color.r} ${color.g} ${color.b}");
+    print("Red   Lower Threshold $redLowerThreshold");
+    print("Green Lower Threshold $greenLowerThreshold");
+    print("Blue  Lower Threshold $blueLowerThreshold");
+    print("Red   Upper Threshold $redUpThreshold");
+    print("Green Upper Threshold $greenUpThreshold");
+    print("Blue  Upper Threshold $blueUpThreshold");
     for (var tcolor in list) {
       var closeToR =
-          tcolor.r == 0 ? color.r < redLowerThreshold : color.r >= 0.50;
+          tcolor.r == 0
+              ? color.r < redLowerThreshold
+              : color.r >= redUpThreshold;
       var closeToG =
-          tcolor.g == 0 ? color.g < greenLowerThreshold : color.g >= 0.50;
+          tcolor.g == 0
+              ? color.g < greenLowerThreshold
+              : color.g >= greenUpThreshold;
       var closeToB =
-          tcolor.b == 0 ? color.b < blueLowerThreshold : color.b >= 0.50;
+          tcolor.b == 0
+              ? color.b < blueLowerThreshold
+              : color.b >= blueUpThreshold;
       if (closeToR && closeToG && closeToB) {
         return tcolor;
       }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hextty/color_entry.dart';
 import 'package:hextty/color_extensions.dart';
 import 'package:hextty/color_preview.dart';
+import 'package:hextty/themes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +16,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      // themeMode: ThemeMode.dark,
+      //theme: ThemeData(
+      //  colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      //),
+      theme: NeoBrutalistTheme.darkTheme,
       home: const MyHomePage(title: 'hextty'),
     );
   }
@@ -38,6 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
   double _redValueThreshold = 178;
   double _greenValueThreshold = 178;
   double _blueValueThreshold = 178;
+
+  double _redUpperBoundThreshold = 125;
+  double _greenUpperBoundThreshold = 125;
+  double _blueUpperBoundThreshold = 125;
 
   final TextEditingController _textController = TextEditingController();
   void _parseTextToList() {
@@ -68,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
+            Text("Lower Bound Threshold"),
             Row(
               // Equivalent to CSS justify-content: space-around
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -77,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 SliderTheme(
                   data: SliderThemeData(
                     activeTrackColor: Colors.red,
-                    inactiveTrackColor: Colors.red.withOpacity(0.3),
+                    inactiveTrackColor: Colors.red.withValues(alpha: 0.3),
                     thumbColor: Colors.red,
                   ),
                   child: Slider(
@@ -96,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 SliderTheme(
                   data: SliderThemeData(
                     activeTrackColor: Colors.green,
-                    inactiveTrackColor: Colors.green.withOpacity(0.3),
+                    inactiveTrackColor: Colors.green.withValues(alpha: 0.3),
                     thumbColor: Colors.green,
                   ),
                   child: Slider(
@@ -115,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 SliderTheme(
                   data: SliderThemeData(
                     activeTrackColor: Colors.blue,
-                    inactiveTrackColor: Colors.blue.withOpacity(0.3),
+                    inactiveTrackColor: Colors.blue.withValues(alpha: 0.3),
                     thumbColor: Colors.blue,
                   ),
                   child: Slider(
@@ -127,6 +135,72 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (double value) {
                       setState(() {
                         _blueValueThreshold = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Text("Upper Bound Threshold"),
+            Row(
+              // Equivalent to CSS justify-content: space-around
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // Equivalent to CSS align-items: center
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SliderTheme(
+                  data: SliderThemeData(
+                    activeTrackColor: Colors.red,
+                    inactiveTrackColor: Colors.red.withValues(alpha: 0.3),
+                    thumbColor: Colors.red,
+                  ),
+                  child: Slider(
+                    value: _redUpperBoundThreshold,
+                    min: 0,
+                    max: 255,
+                    divisions: 255,
+                    label: _redUpperBoundThreshold.round().toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        _redUpperBoundThreshold = value;
+                      });
+                    },
+                  ),
+                ),
+                SliderTheme(
+                  data: SliderThemeData(
+                    activeTrackColor: Colors.green,
+                    inactiveTrackColor: Colors.green.withValues(alpha: 0.3),
+                    thumbColor: Colors.green,
+                  ),
+                  child: Slider(
+                    value: _greenUpperBoundThreshold,
+                    min: 0,
+                    max: 255,
+                    divisions: 255,
+                    label: _greenUpperBoundThreshold.round().toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        _greenUpperBoundThreshold = value;
+                      });
+                    },
+                  ),
+                ),
+                SliderTheme(
+                  data: SliderThemeData(
+                    activeTrackColor: Colors.blue,
+                    inactiveTrackColor: Colors.blue.withValues(alpha: 0.3),
+                    thumbColor: Colors.blue,
+                  ),
+                  child: Slider(
+                    value: _blueUpperBoundThreshold,
+                    min: 0,
+                    max: 255,
+                    divisions: 255,
+                    label: _blueUpperBoundThreshold.round().toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        _blueUpperBoundThreshold = value;
                       });
                     },
                   ),
@@ -168,12 +242,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           closestHex =
                               TerminalColors.findClosest(
                                 c,
-                                redLowerThreshold:
-                                    (100 * _redValueThreshold) / 255,
+                                redLowerThreshold: (_redValueThreshold) / 255,
                                 greenLowerThreshold:
-                                    (100 * _greenValueThreshold) / 255,
-                                blueLowerThreshold:
-                                    (100 * _blueValueThreshold) / 255,
+                                    (_greenValueThreshold) / 255,
+                                blueLowerThreshold: (_blueValueThreshold) / 255,
+                                redUpThreshold: (_redUpperBoundThreshold) / 255,
+                                greenUpThreshold:
+                                    (_greenUpperBoundThreshold) / 255,
+                                blueUpThreshold:
+                                    (_blueUpperBoundThreshold) / 255,
                               ).toHexString();
                         } catch (e) {
                           closestHex = "No Match";
@@ -182,11 +259,16 @@ class _MyHomePageState extends State<MyHomePage> {
                           title: Row(
                             children: [
                               ColorPreview(
-                                hexColor: closestHex,
+                                hexColor: cHex,
                                 shape: BoxShape.rectangle,
                                 size: 16,
                               ),
                               Text("$cHex = $closestHex"),
+                              ColorPreview(
+                                hexColor: closestHex,
+                                shape: BoxShape.rectangle,
+                                size: 16,
+                              ),
                             ],
                           ),
                         );
@@ -202,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.copy_all_outlined),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

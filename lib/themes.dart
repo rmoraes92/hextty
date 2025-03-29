@@ -17,7 +17,7 @@ class NeoBrutalistTheme {
         color: Colors.black,
         foregroundColor: Colors.white,
         elevation: 4,
-        shadowColor: Colors.black.withOpacity(0.5),
+        shadowColor: Colors.black.withValues(alpha: .5),
       ),
 
       // Text Theme
@@ -59,7 +59,7 @@ class NeoBrutalistTheme {
             side: BorderSide(color: Colors.black, width: 2),
           ),
           elevation: 4,
-          shadowColor: Colors.black.withOpacity(0.5),
+          shadowColor: Colors.black.withValues(alpha: .5),
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
@@ -72,7 +72,7 @@ class NeoBrutalistTheme {
           borderRadius: BorderRadius.zero,
           side: BorderSide(color: Colors.black, width: 2),
         ),
-        shadowColor: Colors.black.withOpacity(0.5),
+        shadowColor: Colors.black.withValues(alpha: .5),
       ),
 
       // Checkbox Theme
@@ -120,7 +120,7 @@ class NeoBrutalistTheme {
       colorScheme: ColorScheme.dark(
         primary: Color(0xFFFF4D4D), // Vibrant red
         secondary: Color(0xFF00FF00), // Bright green
-        background: Color(0xFF121212),
+        // gitbackground: Color(0xFF121212),
         surface: Color(0xFF1E1E1E),
         error: Color(0xFFFF0000),
       ),

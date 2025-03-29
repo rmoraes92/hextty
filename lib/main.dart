@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hextty/color_entry.dart';
+import 'package:flutter/services.dart';
 import 'package:hextty/color_extensions.dart';
 import 'package:hextty/color_preview.dart';
 import 'package:hextty/themes.dart';
@@ -236,22 +236,28 @@ class _MyHomePageState extends State<MyHomePage> {
                             colors[idx][0] == "#"
                                 ? colors[idx].substring(1)
                                 : colors[idx];
-                        Color c = ColorFromHex.fromHex(cHex);
+
+                        Color inputColor = ColorFactory.fromHex(cHex);
                         String closestHex;
                         try {
                           closestHex =
-                              TerminalColors.findClosest(
-                                c,
-                                redLowerThreshold: (_redValueThreshold) / 255,
-                                greenLowerThreshold:
-                                    (_greenValueThreshold) / 255,
-                                blueLowerThreshold: (_blueValueThreshold) / 255,
-                                redUpThreshold: (_redUpperBoundThreshold) / 255,
-                                greenUpThreshold:
-                                    (_greenUpperBoundThreshold) / 255,
-                                blueUpThreshold:
-                                    (_blueUpperBoundThreshold) / 255,
-                              ).toHexString();
+                              inputColor
+                                  .findClosest(
+                                    TerminalColors.list,
+                                    redLowerThreshold:
+                                        (_redValueThreshold) / 255,
+                                    greenLowerThreshold:
+                                        (_greenValueThreshold) / 255,
+                                    blueLowerThreshold:
+                                        (_blueValueThreshold) / 255,
+                                    redUpThreshold:
+                                        (_redUpperBoundThreshold) / 255,
+                                    greenUpThreshold:
+                                        (_greenUpperBoundThreshold) / 255,
+                                    blueUpThreshold:
+                                        (_blueUpperBoundThreshold) / 255,
+                                  )
+                                  .toHexString();
                         } catch (e) {
                           closestHex = "No Match";
                         }
@@ -282,7 +288,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Clipboard.setData(ClipboardData(text: _textController.text));
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.copy_all_outlined),
       ), // This trailing comma makes auto-formatting nicer for build methods.

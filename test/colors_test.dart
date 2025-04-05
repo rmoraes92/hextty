@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hextty/color_extensions.dart';
+import 'package:hextty/services/color_extensions.dart';
 
 void main() {
   group('finding closest colors', () {

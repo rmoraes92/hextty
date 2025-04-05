@@ -39,13 +39,15 @@ extension ColorFindClosest on Color {
     double greenUpThreshold = 0.50,
     double blueUpThreshold = 0.50,
   }) {
-    logger.t("Color $r $g $b");
-    logger.t("Red   Lower Threshold $redLowerThreshold");
-    logger.t("Green Lower Threshold $greenLowerThreshold");
-    logger.t("Blue  Lower Threshold $blueLowerThreshold");
-    logger.t("Red   Upper Threshold $redUpThreshold");
-    logger.t("Green Upper Threshold $greenUpThreshold");
-    logger.t("Blue  Upper Threshold $blueUpThreshold");
+    logger.t(
+      "finding closest to $r $g $b with $redLowerThreshold/$redUpThreshold $greenLowerThreshold/$greenUpThreshold $blueLowerThreshold/$blueUpThreshold",
+    );
+    // logger.t("Red   Lower Threshold $redLowerThreshold");
+    // logger.t("Green Lower Threshold $greenLowerThreshold");
+    // logger.t("Blue  Lower Threshold $blueLowerThreshold");
+    // logger.t("Red   Upper Threshold $redUpThreshold");
+    // logger.t("Green Upper Threshold $greenUpThreshold");
+    // logger.t("Blue  Upper Threshold $blueUpThreshold");
     for (var colorEntry in colorList) {
       var closeToR =
           colorEntry.r == 0 ? r < redLowerThreshold : r >= redUpThreshold;

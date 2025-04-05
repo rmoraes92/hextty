@@ -11,11 +11,12 @@ import 'package:logger/logger.dart';
 // Create a global logger instance
 final logger = Logger(
   printer: PrettyPrinter(
-    methodCount: 2,
+    methodCount: 0,
     errorMethodCount: 8,
-    lineLength: 120,
-    colors: true,
-    printEmojis: true,
+    lineLength: 80,
+    colors: false,
+    printEmojis: false,
+    noBoxingByDefault: true,
     dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
     // 'printTime' is deprecated and shouldn't be used. Use `dateTimeFormat` with `DateTimeFormat.onlyTimeAndSinceStart` or `DateTimeFormat.none` instead.
     // Try replacing the use of the deprecated member with the replacement.

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hextty/color_extensions.dart';
-import 'package:hextty/color_preview.dart';
+import 'package:hextty/services/color_extensions.dart';
+import 'package:hextty/widgets/color_preview.dart';
+import 'package:hextty/logger.dart';
+import 'package:hextty/models.dart';
 import 'package:hextty/themes.dart';
+import 'package:hextty/widgets/bound_level_color_sliders.dart';
+import 'package:hextty/widgets/color_slider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,11 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      // themeMode: ThemeMode.dark,
-      //theme: ThemeData(
-      //  colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      //),
-      theme: NeoBrutalistTheme.darkTheme,
+      //theme: NeoBrutalistTheme.darkTheme,
       home: const MyHomePage(title: 'hextty'),
     );
   }
@@ -36,15 +36,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  ColorThreshold thresholdColorRed = ColorThreshold(color: Colors.red);
+  ColorThreshold thresholdColorGreen = ColorThreshold(color: Colors.green);
+  ColorThreshold thresholdColorBlue = ColorThreshold(color: Colors.blue);
+
   List<String> colors = [];
-
-  double _redValueThreshold = 178;
-  double _greenValueThreshold = 178;
-  double _blueValueThreshold = 178;
-
-  double _redUpperBoundThreshold = 125;
-  double _greenUpperBoundThreshold = 125;
-  double _blueUpperBoundThreshold = 125;
 
   final TextEditingController _textController = TextEditingController();
   void _parseTextToList() {
@@ -54,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
           _textController.text
               .split('\n')
               .where((line) => line.trim().isNotEmpty)
-              // .map((line) => ColorEntry(line.trim()))
               .toList();
     });
   }
@@ -67,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    logger.t("_MyHomePageState - build");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -75,137 +71,51 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
-            Text("Lower Bound Threshold"),
-            Row(
-              // Equivalent to CSS justify-content: space-around
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              // Equivalent to CSS align-items: center
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SliderTheme(
-                  data: SliderThemeData(
-                    activeTrackColor: Colors.red,
-                    inactiveTrackColor: Colors.red.withValues(alpha: 0.3),
-                    thumbColor: Colors.red,
-                  ),
-                  child: Slider(
-                    value: _redValueThreshold,
-                    min: 0,
-                    max: 255,
-                    divisions: 255,
-                    label: _redValueThreshold.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _redValueThreshold = value;
-                      });
-                    },
-                  ),
-                ),
-                SliderTheme(
-                  data: SliderThemeData(
-                    activeTrackColor: Colors.green,
-                    inactiveTrackColor: Colors.green.withValues(alpha: 0.3),
-                    thumbColor: Colors.green,
-                  ),
-                  child: Slider(
-                    value: _greenValueThreshold,
-                    min: 0,
-                    max: 255,
-                    divisions: 255,
-                    label: _greenValueThreshold.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _greenValueThreshold = value;
-                      });
-                    },
-                  ),
-                ),
-                SliderTheme(
-                  data: SliderThemeData(
-                    activeTrackColor: Colors.blue,
-                    inactiveTrackColor: Colors.blue.withValues(alpha: 0.3),
-                    thumbColor: Colors.blue,
-                  ),
-                  child: Slider(
-                    value: _blueValueThreshold,
-                    min: 0,
-                    max: 255,
-                    divisions: 255,
-                    label: _blueValueThreshold.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _blueValueThreshold = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
+            BoundLevelColorSliders(
+              mode: BoundLevelColorSlidersMode.upperBound,
+              red: thresholdColorRed,
+              green: thresholdColorGreen,
+              blue: thresholdColorBlue,
+              onChangedThresholdRed: (double newUpperBound) {
+                logger.t("_MyHomePageState - onChangedThresholdRed - uppper");
+                setState(() {
+                  thresholdColorRed.upperBound = newUpperBound;
+                });
+              },
+              onChangedThresholdGreen: (double newUpperBound) {
+                logger.t("_MyHomePageState - onChangedThresholdGreen");
+                setState(() {
+                  thresholdColorGreen.upperBound = newUpperBound;
+                });
+              },
+              onChangedThresholdBlue: (double newUpperBound) {
+                logger.t("_MyHomePageState - onChangedThresholdBlue");
+                setState(() {
+                  thresholdColorBlue.upperBound = newUpperBound;
+                });
+              },
             ),
-            Text("Upper Bound Threshold"),
-            Row(
-              // Equivalent to CSS justify-content: space-around
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              // Equivalent to CSS align-items: center
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SliderTheme(
-                  data: SliderThemeData(
-                    activeTrackColor: Colors.red,
-                    inactiveTrackColor: Colors.red.withValues(alpha: 0.3),
-                    thumbColor: Colors.red,
-                  ),
-                  child: Slider(
-                    value: _redUpperBoundThreshold,
-                    min: 0,
-                    max: 255,
-                    divisions: 255,
-                    label: _redUpperBoundThreshold.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _redUpperBoundThreshold = value;
-                      });
-                    },
-                  ),
-                ),
-                SliderTheme(
-                  data: SliderThemeData(
-                    activeTrackColor: Colors.green,
-                    inactiveTrackColor: Colors.green.withValues(alpha: 0.3),
-                    thumbColor: Colors.green,
-                  ),
-                  child: Slider(
-                    value: _greenUpperBoundThreshold,
-                    min: 0,
-                    max: 255,
-                    divisions: 255,
-                    label: _greenUpperBoundThreshold.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _greenUpperBoundThreshold = value;
-                      });
-                    },
-                  ),
-                ),
-                SliderTheme(
-                  data: SliderThemeData(
-                    activeTrackColor: Colors.blue,
-                    inactiveTrackColor: Colors.blue.withValues(alpha: 0.3),
-                    thumbColor: Colors.blue,
-                  ),
-                  child: Slider(
-                    value: _blueUpperBoundThreshold,
-                    min: 0,
-                    max: 255,
-                    divisions: 255,
-                    label: _blueUpperBoundThreshold.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _blueUpperBoundThreshold = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
+            BoundLevelColorSliders(
+              mode: BoundLevelColorSlidersMode.lowerBound,
+              red: thresholdColorRed,
+              green: thresholdColorGreen,
+              blue: thresholdColorBlue,
+              onChangedThresholdRed: (double newLowerBound) {
+                logger.t("_MyHomePageState - onChangedThresholdRed - lower");
+                setState(() {
+                  thresholdColorRed.lowerBound = newLowerBound;
+                });
+              },
+              onChangedThresholdGreen: (double newLowerBound) {
+                setState(() {
+                  thresholdColorGreen.lowerBound = newLowerBound;
+                });
+              },
+              onChangedThresholdBlue: (double newLowerBound) {
+                setState(() {
+                  thresholdColorBlue.lowerBound = newLowerBound;
+                });
+              },
             ),
             // Editor
             Expanded(
@@ -245,17 +155,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                   .findClosest(
                                     TerminalColors.list,
                                     redLowerThreshold:
-                                        (_redValueThreshold) / 255,
+                                        (thresholdColorRed.lowerBound) / 255,
                                     greenLowerThreshold:
-                                        (_greenValueThreshold) / 255,
+                                        (thresholdColorGreen.lowerBound) / 255,
                                     blueLowerThreshold:
-                                        (_blueValueThreshold) / 255,
+                                        (thresholdColorBlue.lowerBound) / 255,
                                     redUpThreshold:
-                                        (_redUpperBoundThreshold) / 255,
+                                        (thresholdColorRed.upperBound) / 255,
                                     greenUpThreshold:
-                                        (_greenUpperBoundThreshold) / 255,
+                                        (thresholdColorGreen.upperBound) / 255,
                                     blueUpThreshold:
-                                        (_blueUpperBoundThreshold) / 255,
+                                        (thresholdColorBlue.upperBound) / 255,
                                   )
                                   .toHexString();
                         } catch (e) {
@@ -289,6 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // TODO loop over the main array and compose a proper string to be copied
           Clipboard.setData(ClipboardData(text: _textController.text));
         },
         tooltip: 'Increment',
